@@ -164,7 +164,7 @@
             // colEstado
             // 
             this.colEstado.Caption = "Estado";
-            this.colEstado.FieldName = "RidEstado";
+            this.colEstado.FieldName = "NombreEstado";
             this.colEstado.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("colEstado.ImageOptions.Image")));
             this.colEstado.Name = "colEstado";
             this.colEstado.Visible = true;
