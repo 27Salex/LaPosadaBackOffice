@@ -103,6 +103,7 @@ namespace LaPosadaBackOffice
             if (TurnoAbierto != null)
             {
                 TurnoAbierto.EstaCerrado = true;
+                TurnoAbierto.FechaHoraFin = DateTime.Now;
                 TurnoAbierto.Save();
             }
 
@@ -111,7 +112,7 @@ namespace LaPosadaBackOffice
             menuReabrirTurno.Visible = true;
         }
 
-        private void menuReabrirTurno_Click(object sender, EventArgs e)
+        private void menuAbrirTurno_Click(object sender, EventArgs e)
         {
             TurnoAbierto = new Turno
             {
@@ -142,24 +143,37 @@ namespace LaPosadaBackOffice
         #region Update Timer events
         private void UpdateTimer_Tick(object sender, EventArgs e)
         {
-            
             ActualizarPedidos();
         }
 
         void ActualizarPedidos()
         {
             UpdateTimer.Stop();
-            barUpdating.Visibility = BarItemVisibility.Always;
-            menuCerrarTurno.Visible = !TurnoAbierto.EstaCerrado;
-            menuReabrirTurno.Visible = TurnoAbierto.EstaCerrado;
 
-            Application.DoEvents();
+            try
+            {
+                if (TurnoAbierto != null)
+                {
+                    barUpdating.Visibility = BarItemVisibility.Always;
+                    menuCerrarTurno.Visible = !TurnoAbierto.EstaCerrado;
+                    menuReabrirTurno.Visible = TurnoAbierto.EstaCerrado;
 
-            PedidoDAL pedidoDAL = new PedidoDAL();
-            gridPedidos.DataSource = TurnoAbierto.Pedidos ?? null;
+                    Application.DoEvents();
 
-            barUpdating.Visibility = BarItemVisibility.Never;
-            UpdateTimer.Start();
+                    PedidoDAL pedidoDAL = new PedidoDAL();
+                    gridPedidos.DataSource = TurnoAbierto.Pedidos ?? null;
+
+                    barUpdating.Visibility = BarItemVisibility.Never;
+                    Application.DoEvents();
+                    UpdateTimer.Start();
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("Error actualizando los pedidos, Error: " + e.Message);
+                File.AppendAllText("./LogError.txt", $"Error actualizando los pedidos, Error: {e.Message}\n {e.StackTrace}");
+                throw;
+            }
         }
         #endregion
 
@@ -201,11 +215,6 @@ namespace LaPosadaBackOffice
             lblPrecioTotal.Text = pedido.TotalPedido.ToString() + "€";
             cboxEstado.SelectedIndex = pedido.RidEstado - 1;
             pedidoDetalle = pedido;
-        }
-
-        private void paginaDetalles_Paint(object sender, PaintEventArgs e)
-        {
-
         }
 
         private void cboxEstado_SelectedIndexChanged(object sender, EventArgs e)

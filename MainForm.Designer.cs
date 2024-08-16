@@ -299,7 +299,6 @@
             this.paginaDetalles.Name = "paginaDetalles";
             this.paginaDetalles.Size = new System.Drawing.Size(745, 502);
             this.paginaDetalles.Text = "Detalles pedido";
-            this.paginaDetalles.Paint += new System.Windows.Forms.PaintEventHandler(this.paginaDetalles_Paint);
             // 
             // label6
             // 
@@ -409,7 +408,7 @@
             this.menuReabrirTurno.Name = "menuReabrirTurno";
             this.menuReabrirTurno.Style = DevExpress.XtraBars.Navigation.ElementStyle.Item;
             this.menuReabrirTurno.Text = "Abrir Turno";
-            this.menuReabrirTurno.Click += new System.EventHandler(this.menuReabrirTurno_Click);
+            this.menuReabrirTurno.Click += new System.EventHandler(this.menuAbrirTurno_Click);
             // 
             // menuCerrarTurno
             // 
