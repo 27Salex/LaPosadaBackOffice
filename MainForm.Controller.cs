@@ -1,5 +1,6 @@
 ﻿using DevExpress.Utils;
 using DevExpress.XtraBars;
+using DevExpress.XtraEditors;
 using LaPosadaDAL.Models;
 using LaPosadaDAL.Services;
 using System;
@@ -18,7 +19,7 @@ namespace LaPosadaBackOffice
         {
             var ultTurno = new TurnoDAL().GetAll("WHERE EstaCerrado = 0 ORDER BY FechaHoraInicio", true).FirstOrDefault();
 
-            if (ultTurno != null)
+            if (ultTurno != null && ultTurno.IdTurno > 0)
             {
                 DialogResult res = MessageBox.Show("Se ha encontrado un turno sin cerrar de la ultima sesión, " +
                     "¿Desea retomar este y abirlo?", "Reanudar turno", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
@@ -28,6 +29,7 @@ namespace LaPosadaBackOffice
                     ultTurno.EstaCerrado = true;
                     ultTurno.FechaHoraFin = DateTime.Now;
                     ultTurno.Save();
+                    menuReabrirTurno.Visible = true;
                 }
                 else
                 {
@@ -35,9 +37,15 @@ namespace LaPosadaBackOffice
                     TurnoAbierto.FechaHoraFin = null;
                     TurnoAbierto.Save();
                     ActualizarPedidos();
-                    cboxEstado.DataSource = new EstadoDAL().GetAll(null, false);
+                    menuCerrarTurno.Visible = true;
                 }
-            } 
+                
+            }
+            else
+            {
+                menuReabrirTurno.Visible = true;
+            }
+            cboxEstado.DataSource = new EstadoDAL().GetAll(null, false);
         }
 
         #region Image Drag Drop
@@ -114,6 +122,12 @@ namespace LaPosadaBackOffice
 
         private void menuAbrirTurno_Click(object sender, EventArgs e)
         {
+            if (TurnoAbierto != null)
+            {
+                TurnoAbierto.EstaCerrado = true;
+                TurnoAbierto.FechaHoraFin = DateTime.Now;
+                TurnoAbierto.Save();
+            }
             TurnoAbierto = new Turno
             {
                 FechaHoraInicio = DateTime.Now,

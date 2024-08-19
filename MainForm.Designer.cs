@@ -408,6 +408,7 @@
             this.menuReabrirTurno.Name = "menuReabrirTurno";
             this.menuReabrirTurno.Style = DevExpress.XtraBars.Navigation.ElementStyle.Item;
             this.menuReabrirTurno.Text = "Abrir Turno";
+            this.menuReabrirTurno.Visible = false;
             this.menuReabrirTurno.Click += new System.EventHandler(this.menuAbrirTurno_Click);
             // 
             // menuCerrarTurno
